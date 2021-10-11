@@ -1,0 +1,9 @@
+Comandos SHOW
+sh interfaces (interface-id) = Estatus de las interfaces y configuracion
+sh startup-config = Configuracion actual en la RAM
+sh run = Configuracion actual operando
+sh flash = Informacion sobre la Imagen del SO
+sh version = Estatus Hardware y software del sistema
+sh history = Historial de comandos lanzados en el dispositivo
+sh ip (interface-id) = Informacion IP sobre una interface
+sh mac-address-table = Tabla de direcciones MAC 

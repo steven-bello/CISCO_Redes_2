@@ -1,0 +1,29 @@
+Pasos 8-11
+Origen: Red conectada a Fa0/0 de Seul = 156.252.0.0/16
+Destino: 8.0.0.0/8
+
+***ACL Estandar: Más cercano al destino.***
+
+Ejemplo:
+FA=Trafico saliente (OUT-bound)
+S0/0/0=Trafico entrante (IN-bound) 
+
+-->Router TOKIO
+**Pegar uno por uno los access-list**
+
+ena
+conf t
+access-list 84 deny 156.252.0.0 0.0.255.255
+access-list 84 permit any
+
+interface (s0/0/0 o fa0/0)
+ip access-group 84 (in o out)
+end
+wr
+
+sh run
+sh access-list
+
+
+
+

@@ -1,0 +1,71 @@
+//configuracion de router Guadalajara
+enable 
+configure terminal
+hostname Guadalajara
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+password cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface fa0/0
+ip add 5.5.5.254 255.255.255.0
+no shut
+exit
+interface s0/0/0
+ip add 10.0.1.46 255.255.255.252
+clock rate 56000
+no shut
+end
+copy run start
+
+
+SWITCH
+enable 
+configure terminal
+hostname SwitchGuadalajara_1
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+password cisco
+login
+line vty 0 15
+password cisco
+login
+exit
+interface vlan 1
+ip add 5.5.5.253 255.255.255.0
+no shut
+exit
+ip default-gateway 5.5.5.254
+end 
+copy run start
+
+Switch2 Monterrey
+enable 
+configure terminal
+hostname SwitchMonterrey_2
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+password cisco
+login
+line vty 0 15
+password cisco
+login
+exit
+interface vlan 1
+ip add 172.31.0.130 255.255.255.224
+no shut
+ip default-gateway 172.31.0.129
+end 
+copy run start

@@ -1,0 +1,102 @@
+router seul
+enable 
+configure terminal
+hostname Seul
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface fa0/0
+ip add 10.0.0.190 255.255.255.192
+no shut
+exit
+interface fa0/1
+ip add 10.0.0.126 255.255.255.128
+no shut
+exit
+interface s0/0/1
+ip add 10.0.0.194 255.255.255.252
+clock rate 56000
+no shut
+ip route 7.7.7.0 255.255.255.0 s0/0/1
+end
+copy run start
+
+router Tokio
+enable 
+configure terminal
+hostname Tokio
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface fa0/0
+ip add 7.7.7.254 255.255.255.0
+no shut
+exit
+interface s0/0/0
+ip add 10.0.0.193 255.255.255.252
+clock rate 56000
+no shut
+ip route 10.0.0.0 255.255.255.128 s0/0/0
+ip route 10.0.0.128 255.255.255.192 s0/0/0
+end
+copy run start
+
+SWITCH Seul
+enable 
+configure terminal
+hostname SwitchSeul
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 15
+password cisco
+login
+exit
+interface vlan 1
+ip add 10.0.0.189 255.255.255.192
+no shut
+ip default-gateway 10.0.0.190
+end 
+copy run start
+
+SWITCH Tokio
+enable 
+configure terminal
+hostname SwitchTokio
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 15
+password cisco
+login
+exit
+interface vlan 1
+ip add 7.7.7.253 255.255.255.0
+no shut
+ip default-gateway 7.7.7.254
+end 
+copy run start

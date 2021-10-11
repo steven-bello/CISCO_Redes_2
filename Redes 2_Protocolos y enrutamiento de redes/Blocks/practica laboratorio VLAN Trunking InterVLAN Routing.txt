@@ -1,0 +1,277 @@
+Piso1
+ena
+conf t
+ho Piso1
+ena se class
+banner motd "Prohibido el accesso a este dispositivo"
+no ip domain-lookup
+service password-encryption
+line con 0
+pass cisco
+login
+vty 0 15
+pass cisco
+login
+exit
+interface vlan 88
+ip add 172.16.88.253 255.255.255.0
+no shut 
+exit
+ip default-gateway 172.16.88.254
+end 
+wr
+
+sh run
+
+
+--> Trunking SP1
+conf t
+interface fa 0/1
+switchport mode trunk
+switchport trunk native vlan 88
+switchport trunk allowed vlan 22,33,88
+interface fa0/24
+switchport mode trunk
+switchport trunk native vlan 88
+switchport trunk allowed vlan 22,33,88
+end 
+wr
+
+Piso2
+ena
+conf t
+ho Piso2
+ena se class
+banner motd "Prohibido el accesso a este dispositivo"
+no ip domain-lookup
+service password-encryption
+line con 0
+pass cisco
+login
+vty 0 15
+pass cisco
+login
+exit
+interface vlan 88
+ip add 172.16.88.252 255.255.255.0
+no shut 
+exit
+ip default-gateway 172.16.88.254
+end 
+wr
+
+sh run
+
+--> Trunking SP2
+conf t
+interface fa 0/1
+switchport mode trunk
+switchport trunk native vlan 88
+switchport trunk allowed vlan 22,33,88
+end 
+wr
+
+-->Ambos SWITCHES
+
+conf t 
+vlan 22 
+name alumnos 
+vlan 33 
+name docentes 
+vlan 88 
+name management
+exit
+interface range fa0/2 - 12
+sw mode access
+switchport access vlan 22
+interface range fa0/13 - 23 
+sw mode access
+switchport access vlan 33
+end 
+wr
+
+sh vlan
+
+-->ROUTER Londres
+enable 
+configure terminal
+hostname Londres
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+password cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface fa0/1
+ip add 172.16.88.254 255.255.255.0
+no shut
+exit
+interface fa0/1.22
+ip add 172.16.22.254 255.255.255.0
+no shut
+exit
+interface fa0/1.33
+ip add 172.16.33.254 255.255.255.0
+no shut
+exit
+interface fa0/1.88
+ip add 172.16.88.254 255.255.255.0
+no shut
+exit
+interface s0/0/1
+ip add 10.0.0.14 255.255.255.252
+no shut
+end
+copy run start
+
+-->Inter-VLAN routing en RLondres
+conf t
+int fa0/1
+no ip add
+no shut
+
+int fa0/1.22
+encapsulation dot1q 22
+ip add 172.16.22.254 255.255.255.0
+int fa0/1.33
+encapsulation dot1q 33
+ip add 172.16.33.254 255.255.255.0
+int fa0/1.88
+encapsulation dot1q 88
+ip add 172.16.88.254 255.255.255.0
+end 
+wr
+
+-->ROUTER Berlin
+enable 
+configure terminal
+hostname Berlin
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+password cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface fa0/1
+ip add 192.168.0.254 255.255.255.128
+no shut
+exit
+interface s0/0/1
+ip add 10.0.0.13 255.255.255.252
+clock rate 56000
+no shut
+end
+wr
+
+-->PORT SECURITY SwitchPiso2
+
+ena 
+conf t
+int fa0/17
+switchport mode access
+switchport port-security
+switchport port-security maximum 1
+switchport port-security violation restrict
+switchport port-security mac-address sticky
+end
+wr
+
+sh port-security interface fa0/17
+
+-->UNUSED PORTS ambos SW
+
+-->Piso1
+ena
+conf t 
+interface fa0/1
+no shut
+exit
+interface fa0/24
+no shut
+exit
+interface fa0/6
+no shut
+exit
+interface fa0/22
+no shut
+exit
+interface range fa0/2 - 5
+shutdown
+switchport mode access
+exit
+interface range fa0/7 - 21
+shutdown
+switchport mode access
+exit
+interface fa0/23
+shutdown
+switchport mode access
+exit
+end
+wr
+
+sh run 
+
+-->SPiso2
+
+ena
+conf t 
+interface fa0/1
+no shut
+exit
+interface fa0/11
+no shut
+exit
+interface fa0/17
+no shut
+exit
+interface range fa0/2 - 10
+shutdown
+switchport mode access
+exit
+interface range fa0/12 - 16
+shutdown
+switchport mode access
+exit
+interface range fa0/18 - 24
+shutdown
+switchport mode access
+exit
+end
+wr
+
+sh run
+
+-->RUTAS ESTATICAS
+
+-->LONDRES
+
+ena
+conf t
+ip route 192.168.0.128 255.255.255.128 s0/0/1
+exit
+wr
+
+sh ip route
+
+-->BERLIN
+
+ena
+conf t
+ip route 172.16.22.0 255.255.255.0 s0/0/1
+ip route 172.16.33.0 255.255.255.0 s0/0/1
+ip route 172.16.88.0 255.255.255.0 s0/0/1
+exit
+wr
+
+sh ip route

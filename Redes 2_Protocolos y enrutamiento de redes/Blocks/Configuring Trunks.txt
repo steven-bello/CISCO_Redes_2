@@ -1,0 +1,32 @@
+-->S1
+ena
+conf t
+interface range g0/1-2
+switchport mode trunk
+switchport trunk native vlan 99
+end 
+wr
+-->S2
+ena
+conf t
+interface g0/1
+switchport mode trunk
+switchport trunk native vlan 99
+end
+wr
+
+sh interface trunk
+sh interface *interfaz* switchport
+sh vlan
+-->S3
+ena
+conf t
+interface g0/2
+switchport mode trunk
+switchport trunk native vlan 99
+end
+wr
+
+sh interface trunk
+sh interface *interfaz* switchport
+sh vlan

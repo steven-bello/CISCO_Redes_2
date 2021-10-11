@@ -1,0 +1,38 @@
+Suponiendo que todos los comandos son introducidos en el router ISP
+Y sus respectivas interfaces para R1,R2 Y R3 son Fa0/1,Fa0/2 y Fa0/3
+-->1)Los hosts de la red LAN de R1 no deben acceder a ninguno de los hosts de las redes LAN de R2 y R3
+ena
+conf t
+access-list 10 deny 10.0.4.128 0.0.0.127
+access-list 10 permit any
+interface fa0/1
+ip accesss-group 10 in
+end
+wr
+-->2)Los hosts de la red de R2 no se les permite comunicarse con los hosts de la red LAN de R1
+ena
+conf t
+access-list 20 deny 10.0.2.0 0.0.1.255 
+access-list 20 permit any
+interface fa0/1
+ip accesss-group 20 out
+end
+wr
+-->3)PC1 no podrá comunicarse con ningún host de la red LAN de R3
+ena
+conf t
+access-list 1 deny 10.0.4.200 0.0.0.0
+access-list 1 permit any
+interface fa0/3
+ip accesss-group 1 out
+end
+wr
+-->4)Cualquier otra comunicación es permitida
+ena
+conf t
+access-list permit any
+end
+wr
+
+sh run
+sh access-list

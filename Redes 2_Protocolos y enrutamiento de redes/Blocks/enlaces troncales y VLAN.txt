@@ -1,0 +1,185 @@
+-->S1
+ho S1
+interface vlan 1
+ip add 192.168.1.11 255.255.255.0
+no shut
+exit
+no ip domain-lookup
+service password-encryption
+enable secret class
+banner motd #Unauthorized access is strictly prohibited.#
+line con 0
+password cisco
+login
+loggin synchronous
+line vty 0 15
+password cisco
+loggin synchronous
+login
+end
+wr
+
+-unused oports S1
+conf t
+interface fa0/1
+no shut
+exit
+interface range fa0/2 - 5
+shutdown
+switchport mode access
+exit
+interface fa0/6 
+no shut
+exit
+interface range fa0/7 - 24
+shutdown
+switchport mode access
+exit
+interface range gi0/1 - 2
+shutdown
+switchport mode access
+end
+wr
+
+-->VLAN S1 
+conf t
+vlan 10
+name Estudiantes
+vlan 20
+name Docentes
+vlan 99
+name Administracion
+end
+wr
+
+--> VLAN a interfaces del Switch
+conf t
+interface fa 0/6
+switchport mode access
+switchport access vlan 10
+interface vlan 1
+no ip address
+interface vlan 99
+ip add 192.168.1.11 255.255.255.0
+end
+sh vlan brief
+
+--> VLAN a varias interfaces
+conf t
+interface range f0/11-24
+switchport mode access
+switchport access vlan 10
+end
+conf t
+interface f0/11
+switchport mode access
+switchport access vlan 20
+exit
+interface f0/22
+switchport mode access
+switchport access vlan 20
+end
+sh vlan brief
+
+interface f0/24
+no switchport access vlan
+end
+
+
+interface f0/24
+switchport access vlan 30
+
+sh vlan brief
+
+-->DTP para iniciar enlace troncal F0/1
+conf t
+interface f0/1
+switchport mode dynamic desirable
+end
+
+
+conf t
+interface f0/1
+switchport mode trunk
+end
+
+sh interfaces trunk
+
+
+-->S2
+ena
+conf t
+ho S2
+interface vlan 1
+ip add 192.168.1.12 255.255.255.0
+no shut
+exit
+no ip domain-lookup
+service password-encryption
+enable secret class
+banner motd #Unauthorized access is strictly prohibited.#
+line con 0
+password cisco
+login
+loggin synchronous
+line vty 0 15
+password cisco
+loggin synchronous
+login
+end
+wr
+
+-unused oports S2
+conf t
+interface fa0/1
+no shut
+exit
+interface range fa0/2 - 10
+shutdown
+switchport mode access
+exit
+interface fa0/11 
+no shut
+exit
+interface range fa0/12 - 17
+shutdown
+switchport mode access
+exit
+interface fa0/18 
+no shut
+exit
+interface range fa0/19 - 24
+shutdown
+switchport mode access
+exit
+interface range gi0/1 - 2
+shutdown
+switchport mode access
+end
+wr
+
+-->VLAN S2
+conf t
+vlan 10
+name Estudiantes
+vlan 20
+name Docentes
+vlan 99
+name Administracion
+end
+wr
+
+--> VLAN a interfaces del Switch 2 
+conf t
+interface fa 0/11
+switchport mode access
+switchport access vlan 10
+interface fa 0/18
+switchport mode access
+switchport access vlan 20
+interface vlan 1
+no ip address
+interface vlan 99
+ip add 192.168.1.12 255.255.255.0
+end
+sh vlan brief

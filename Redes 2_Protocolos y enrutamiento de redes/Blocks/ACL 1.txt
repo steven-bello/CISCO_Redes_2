@@ -1,0 +1,40 @@
+-->1 BERLIN
+ena
+conf t
+access-list 90 deny 184.66.9.32 0.0.0.63
+access-list 90 permit any
+interface gi0/0
+ip accesss-group 90 out
+sh run
+sh access-list
+-->2 ROMA
+ena
+conf t
+access-list 80 deny 98.1.2.128 0.0.0.127  
+access-list 80 permit any
+interface gi0/0
+ip accesss-group 80 out
+sh run
+sh access-list
+-->3 TOKIO
+ena
+conf t
+access-list 70 permit host 208.45.77.4 (0.0.0.0)
+access-list 70 permit any
+interface gi0/0
+ip accesss-group 70 out
+sh run
+sh access-list
+-->4 BERLIN
+ena
+conf t
+access-list 60 deny 98.1.2.144 0.0.0.0
+access-list 60 permit 98.1.2.128 0.0.0.127
+interface gi0/0
+ip accesss-group 60 out
+sh run
+sh access-list
+-->5
+access-list permit any
+sh run
+sh access-list

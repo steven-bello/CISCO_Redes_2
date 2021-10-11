@@ -1,0 +1,51 @@
+10-3-1-8
+RTA
+ena
+conf t
+ho RTA
+ena secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Access prohibited for unauthorized personal"
+line con 0
+password cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+int gi0/0
+ip add 172.16.1.1 255.255.255.0
+no shut
+exit
+wr
+
+Router# copy tftp running-config
+
+Address or name of remote host []? 172.16.1.2
+
+Source filename []? RTA-confg
+
+Destination filename [running-config]? *enter*
+
+conf t
+ho RTA-1
+exit
+wr
+
+conf t
+copy running-config tftp
+Address or name of remote host []? 172.16.1.2
+*enter*
+
+copy flash tftp
+ c1900-universalk9-mz.SPA.151-4.M4.bin
+172.16.1.2
+*enter*
+
+
+conf t
+int gi0/1 179.31.1.1 255.255.255.0
+no shut
+end
+wr

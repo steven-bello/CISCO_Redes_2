@@ -1,0 +1,27 @@
+1.En R1
+conf t
+access-list 10 deny 192.168.10.0 0.0.0.255
+access-list 10 permit any
+int fa0/1
+ip access-group 10 out
+end
+wr
+2.En R2
+conf t
+access-list 11 deny 192.168.11.0 0.0.0.255
+access-list 11 permit any
+int s0/1/0
+ip access-group 11 out
+end
+wr
+
+3.En R3
+conf t
+ip access-list standard NO_ACCESS
+deny host 192.168.30.128
+permit any
+int fa0/0
+ip access-group NO_ACCESS in
+end
+wr
+

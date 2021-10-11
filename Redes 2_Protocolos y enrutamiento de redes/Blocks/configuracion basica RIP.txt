@@ -1,0 +1,119 @@
+enable 
+configure terminal
+hostname RouterA
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface fa0/0
+ip add 155.89.13.1 255.255.255.0
+no shut
+exit
+interface s0/0/1
+ip add 30.47.100.1 255.255.255.252
+no shut
+end
+copy run start
+sh run
+
+RouterB
+
+enable 
+configure terminal
+hostname RouterB
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface fa0/0
+ip add 209.76.20.1 255.255.254.0
+no shut
+interface s0/0/0
+ip add 30.47.100.2 255.255.255.252
+clock rate 56000
+no shut
+interface s0/0/1
+ip add 179.11.0.1 255.255.255.252
+no shut
+end
+copy run start
+sh
+
+RouterC
+
+enable 
+configure terminal
+hostname RouterC
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface fa0/0
+ip add 45.0.234.2 255.255.255.128
+no shut
+interface fa0/1
+ip add 45.0.234.1 255.255.255.128
+no shut
+interface s0/0/0
+ip add 179.11.0.2 255.255.255.252
+clockm rate 56000
+no shut
+end
+copy run start
+sh run
+
+CONFIGURACION BASICA RIPV2
+routerA
+conf t
+router rip
+vesion 2
+newtwork 155.89.0.0
+network 30.0.0.0
+end
+wr
+
+155.89 es calse B
+2 octetos de red /16
+30 es clse A
+1 octeto de red /16
+
+
+routerB
+conf t
+router rip
+vesion 2
+network 30.0.0.0
+newtwork 179.11.0.0
+network 209.76.20.0
+end
+wr
+
+routerC
+conf t
+router rip
+vesion 2
+newtwork 179.11.0.0
+network 45.0.0.0
+end
+wr

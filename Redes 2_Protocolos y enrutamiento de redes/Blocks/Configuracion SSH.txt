@@ -1,0 +1,20 @@
+Practica 5.2.1.4 configuracion de SSH
+config t
+ip domain-name netacad.pka
+crypto key generate rsa
+
+1024
+
+username administrator secret cisco
+line vty 0 15
+transport input ssh
+login local
+exit
+ip ssh version 2
+exit
+
+conf t
+line vty 0 14
+no password
+end
+wr

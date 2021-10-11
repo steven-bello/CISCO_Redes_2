@@ -1,0 +1,122 @@
+-->ROUTER R1
+enable 
+configure terminal
+hostname R1
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+password cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface gi0/0
+ip add 10.0.1.254 255.255.255.0
+no shut
+exit
+interface s0/0/0
+ip add 204.1.2.2 255.255.255.252
+clock rate 128000
+no shut
+do wr
+end
+copy run start
+
+-->Ruta estatica R1
+ip route 0.0.0.0 0.0.0.0 s0/0/0
+exit
+wr
+sh ip route
+
+-->ROUTER ISP
+enable 
+configure terminal
+hostname ISP
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+password cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface gi0/0
+ip add 7.7.7.1 255.255.255.0
+no shut
+exit
+interface s0/0/0
+ip add 204.1.2.1 255.255.255.252
+no shut
+end
+copy run start
+
+-->Ruta estatica ISP
+ip route 146.75.3.0 255.255.255.248 s0/0/0
+exit
+wr
+sh ip route
+
+-->NAT ESTATICO R1
+
+sh ip nat translations
+
+P2
+
+conf t
+no access-list 73 permit 10.0.1.0 0.0.0.255
+no ip nat inside source list 73 pool MEXICO
+no ip nat pool MEXICO 146.75.3.3 146.75.3.6 netmask 255.255.255.248
+
+conf t
+access-list 73 permit 10.0.1.0 0.0.0.255
+ip nat pool MEXICO 146.75.3.3 146.75.3.6 netmask 255.255.255.248
+ip nat inside source list 73 pool MEXICO overload
+
+P3
+conf t
+no access-list 73 permit 10.0.1.0 0.0.0.255
+no ip nat inside source list 73 pool MEXICO overload
+no ip nat pool MEXICO 146.75.3.3 146.75.3.6 netmask 255.255.255.248
+
+conf t
+access-list 73 permit 10.0.1.0 0.0.0.255
+ip nat inside source list 73 interface se0/0/0 overload
+exit
+wr
+sh run
+
+sh ip nat translations
+
+
+
+
+--Switch
+ena
+conf t
+ho Piso1
+ena se class
+banner motd "Prohibido el accesso a este dispositivo"
+no ip domain-lookup
+service password-encryption
+line con 0
+pass cisco
+login
+vty 0 15
+pass cisco
+login
+exit
+interface vlan 88
+ip add 172.16.88.253 255.255.255.0
+no shut 
+exit
+ip default-gateway 172.16.88.254
+end 
+wr
+
+sh run

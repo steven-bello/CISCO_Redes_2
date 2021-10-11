@@ -1,0 +1,49 @@
+-->R1
+enable 
+configure terminal
+hostname R1
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface gi0/0
+ip add 186.25.13.65 255.255.255.224
+no shut
+exit
+end
+wr
+
+-->R1 en DHCP
+
+conf t
+ip dhcp excluded-address 186.25.13.65 186.25.13.67
+ip dhcp excluded-address 186.25.13.94
+ip dhcp pool PISOUNO
+network 186.25.13.64 255.255.255.224
+default-router 186.25.13.65
+dns-server 2.3.4.5
+domain-name unitec.mx
+end
+wr
+show run
+
+sh ip dhcp binding (verificar cada ip de cada PC con su mac address)
+
+**Uso de cada comando**
+ip dhcp excluded-address (direcciones usadas en R1,server,switch)
+ip dhcp excluded-address (excluir una o muchas mas direcciones)
+ip dhcp pool PISOUNO 
+network (rango completo de direcciones de la subred)
+default-router
+dns-server (direccion ip a las PCs)
+domain-name (nombre de dominio)
+end
+
+-->ipconfig ---->/all=mas detalles de parametros, /release=borrar parametros DHCP, /renew = devolver parametros DHCP

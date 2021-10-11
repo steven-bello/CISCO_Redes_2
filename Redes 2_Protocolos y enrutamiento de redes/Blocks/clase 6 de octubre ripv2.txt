@@ -1,0 +1,126 @@
+Router Berlin
+
+enable 
+configure terminal
+hostname Berlin
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface fa0/0
+ip add 133.45.89.254 255.255.255.0
+no shut
+interface fa0/1
+ip add 198.207.35.14 255.255.255.240
+no shut
+interface s0/0/1
+ip add 65.208.1.1 255.255.255.252
+no shut
+end
+copy run start
+sh run
+
+Router Roma
+
+enable 
+configure terminal
+hostname Roma
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface fa0/0
+ip add 188.0.33.126 255.255.255.192
+no shut
+interface s0/0/0
+ip add 65.208.1.2 255.255.255.252
+no shut
+interface s0/0/1
+ip add 65.208.1.5 255.255.255.252
+no shut
+end
+copy run start
+sh run
+
+Router Tokio
+
+enable 
+configure terminal
+hostname Tokio
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface fa0/0
+ip add 211.97.45.38 255.255.255.248
+no shut
+interface fa0/1
+ip add 145.0.167.126 255.255.255.128
+no shut
+interface s0/0/0
+ip add 65.208.1.6 255.255.255.252
+no shut
+end
+copy run start
+sh run
+
+Router berlin
+
+conf t 
+router rip
+version 2
+network 198.207.35.0
+network 133.45.0.0
+network 65.0.0.0
+no auto-summary
+passive-interface fa0/0
+passive-interface fa0/1
+end
+wr
+
+Router roma
+
+conf t 
+router rip
+version 2
+network 188.0.0.0
+network 65.0.0.0
+no auto-summary
+passive-interface fa0/0
+end
+wr
+
+Router tokio
+
+conf t 
+router rip
+version 2
+network 211.97.45.0
+network 145.0.0.0
+network 65.0.0.0
+no auto-summary
+passive-interface fa0/0
+passive-interface fa0/1
+end
+wr

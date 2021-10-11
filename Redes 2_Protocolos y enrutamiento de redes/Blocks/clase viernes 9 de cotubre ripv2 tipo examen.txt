@@ -1,0 +1,153 @@
+Router Leon
+
+enable 
+configure terminal
+hostname Leon
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface fa0/1
+ip add 163.77.0.1 255.255.254.0
+no shut
+interface fa0/0
+ip add 163.77.2.1 255.255.255.0
+no shut
+interface s0/0/1
+ip add 1.2.3.5 255.255.255.252
+no shut
+end
+copy run start
+sh run
+
+Router Silao
+
+enable 
+configure terminal
+hostname Silao
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface gi0/0
+ip add 163.77.3.1 255.255.255.128
+no shut
+interface s0/0/0
+ip add 1.2.3.6 255.255.255.252
+clock rate 64000
+no shut
+interface s0/0/1
+ip add 219.244.33.1 255.255.255.252
+clock rate 64000
+no shut
+end
+copy run start
+sh run
+
+Router ISP
+
+enable 
+configure terminal
+hostname ISP
+enable secret class
+no ip domain-lookup
+service password-encryption
+banner motd "Prohibido el acceso no autorizado a este dispositivo"
+line con 0
+passsword cisco
+login
+line vty 0 4
+password cisco
+login
+exit
+interface gi0/0
+ip add 7.7.7.30 255.255.255.224
+no shut
+interface s0/0/0
+ip add 219.244.33.2 255.255.255.252
+no shut
+end
+copy run start
+sh run
+
+Para clases  A:1 B:128 C:192
+
+Router leon
+
+conf t 
+router rip
+version 2
+network 163.77.0.0
+network 1.0.0.0
+no auto-summary
+passive-interface fa0/0
+passive-interface fa0/1
+end
+wr
+
+Router silao
+
+conf t 
+router rip
+version 2
+network 163.77.0.0
+network 1.0.0.0
+network 219.244.33.0 **borrar
+no auto-summary
+passive-interface gi0/0
+passive-interface s0/0/1 **add x no ser vecino RIP
+default-information originate
+end
+wr
+
+Router ISP        
+
+No lleva RIPv2 por ser proveedor, seguridad.
+
+Rutas estaticas
+Silao
+2 formas:
+Interfaz de salida
+1- ip route 0.0.0.0 0.0.0.0 s0/0/1
+
+Ip de sig salto(next-hop)
+2- ip route 0.0.0.0 0.0.0.0 219.244.33.2
+
+**Se propaga la static route de Silao a Leon (en conf t, router rip)
+-->default-information originate: para compartir ruta static
+
+Se podria crear una static route en Leon
+
+En  ISP crear static route
+Op 1
+ip route 163.77.0.0 255.255.254.0 s0/0/0
+ip route 163.77.2.0 255.255.255.0 s0/0/0
+ip route 163.77.3.0 255.255.255.128 s0/0/0
+ip route 1.2.3.4 255.255.255.252 s0/0/0
+
+OP 2 Crear 2 static routes
+ip route 1.2.3.4 255.255.255.252 s0/0/0
+ip route 163.77.0.0 255.255.252.0 s0/0/0 --> 
+Es sumarizada en una sola abarca 3 redes
+(
+163.77.0.0/23
+163.77.2.0/24
+163.77.3.0/25
+0=00000000
+3=00000011
+22 bits coinciden =--> 255.255.255.252.0
+)

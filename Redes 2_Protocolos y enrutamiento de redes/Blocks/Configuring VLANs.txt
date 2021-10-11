@@ -1,0 +1,55 @@
+-->VLAN S1,S2,S3
+ena
+conf t
+vlan 10
+name Faculty/Staff
+vlan 20
+name Students
+vlan 30
+name Guest(Default)
+vlan 99
+name Management&Native
+vlan 150
+name VOICE
+end
+wr
+
+sh vlan brief
+
+--> VLAN a interfaces del Switch
+-->S2 y S3
+conf t
+interface fa 0/11
+switchport mode access
+switchport access vlan 10
+
+interface fa 0/18
+switchport mode access
+switchport access vlan 20
+
+interface fa 0/6
+switchport mode access
+switchport access vlan 30
+end
+wr
+
+-->S3
+conf t
+interface f0/11
+mls qos trust cos
+switchport voice vlan 150
+end
+wr
+
+**ADD**
+-Borrar vlan
+interface f0/24
+no switchport access vlan
+end
+
+--Reactivar vlan
+interface f0/24
+switchport access vlan 30
+
+--Check
+sh vlan brief

@@ -1,0 +1,16 @@
+Comandos para conexion SSH en Switch del router a hacer SSH
+enable
+config t
+ip domain-name cisco.com*
+crypto key generate rsa
+1024
+username admin* secret ccna*
+line vty 0 15
+transport input ssh
+login local
+exit
+ip ssh version 2
+exit
+
+sh ip ssh version 2
+sh ssh

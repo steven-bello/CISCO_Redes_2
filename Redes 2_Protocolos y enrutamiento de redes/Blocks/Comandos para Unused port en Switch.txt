@@ -1,0 +1,31 @@
+Comandos para Unused port en Switch
+
+ena
+conf t 
+int Fa0/0
+shutdown
+switchport mode access
+end
+wr
+
+sh run 
+
+Profe para proger puertos desocupados
+-->Para apagar un puerto
+
+interface fa0/17
+shutdown
+switchport mode access
+exit
+
+-->Para apagar varios puertos a la vez
+
+interface range fa0/3 - 15
+shutdown
+switchport mode access
+exit
+
+interface range gi0/1 - 2
+shutdown
+switchport mode access
+exit

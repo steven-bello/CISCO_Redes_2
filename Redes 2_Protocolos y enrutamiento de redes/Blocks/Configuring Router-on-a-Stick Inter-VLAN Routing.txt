@@ -1,0 +1,35 @@
+-->S1
+ena
+conf t
+vlan 10
+vlan 30
+
+int f0/11
+switchport mode access
+switchport access vlan 10
+int f0/6
+switchport mode access
+switchport access vlan 30
+
+show vlan
+
+-->S1
+conf t
+int g0/1
+switchport mode trunk
+
+-->R1
+ena
+conf t
+int g0/0.10
+encapsulation dot1Q 10
+ip address 172.17.10.1 255.255.255.0
+int g0/0.30
+encapsulation dot1Q 30
+ip address 172.17.30.1 255.255.255.0
+
+conf t
+int g0/0
+no shut
+
+show ip interface brief 

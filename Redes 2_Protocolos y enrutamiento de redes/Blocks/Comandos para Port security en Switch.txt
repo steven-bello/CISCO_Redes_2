@@ -1,0 +1,20 @@
+Comandos para Port security en Switch
+Modos de V
+Modo de configuracion
+-->switchport port-security violation {protect | restrict |shutdown} interface 
+Protect
+Restrict
+Shutdown
+
+ena 
+conf t
+int fa0/1
+switchport mode access
+switchport port-security
+switchport port-security maximum 1
+switchport port-security violation restrict
+switchport port-security mac-address sticky
+end
+wr
+
+sh port-security interface Fa0/1

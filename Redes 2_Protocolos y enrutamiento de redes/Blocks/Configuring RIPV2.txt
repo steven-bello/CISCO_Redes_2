@@ -1,0 +1,42 @@
+S1 = gi0/0
+R2 = s0/0/0
+Web server = R0 = s0/0/1
+
+CONF r2
+auto
+networks r0,r1,r2
+passive gi 0/0
+version
+
+R2
+ena
+conf t
+router rip
+version 2
+network 192.168.3.0
+network 192.168.4.0
+network 192.168.2.0
+no auto-summary
+passive-interface gi0/0
+end
+wr
+
+
+CONF R3
+auto
+networks r0,r1
+passive
+gi0/0
+version
+
+R3
+ena
+conf t
+router rip
+version 2
+network 192.168.4.0
+network 192.168.5.0
+no auto-summary
+passive-interface gi0/0
+end
+wr

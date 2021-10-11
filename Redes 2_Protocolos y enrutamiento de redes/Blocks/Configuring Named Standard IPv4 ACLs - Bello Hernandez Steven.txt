@@ -1,0 +1,7 @@
+ip access-list standard File_Server_Restrictions
+permit host 192.168.20.4
+deny any
+interface fa0/1
+ip access-group File_Server_Restrictions out
+end
+wr
